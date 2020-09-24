@@ -20,7 +20,7 @@ public class World {
 	public World() {
 		landscape = new Landscape();
 		textlists.add(landscape.getTile());
-		textlists.add(rocket.getTile(0));
+		textlists.add(rocket);
 //		renderer = _renderer;
 
 		

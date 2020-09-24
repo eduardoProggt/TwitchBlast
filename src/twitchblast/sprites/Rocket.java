@@ -10,42 +10,25 @@ import twitchblast.Tile;
 
 import twitchblast.opengraphicslibrary.Texture;
 
-public class Rocket extends Drawable /*implements PhysicalObject */{
+public class Rocket extends Tile /*implements PhysicalObject */{
 	public static final int UP = 0;
 	public static final int DOWN = 1;
 	public static final int RIGHT = 2;
 	public static final int LEFT = 3;
 
-	private static Tile tile;
+
 //	private Collider collider = new Collider();
-	private Point location;
+
 	private Vector2d momentum = new Vector2d();
 	private int speed, lifePoints;
 //	private List<LaserAttack> attacks = new ArrayList<>();
 	
 	public Rocket() {
-		
-		setLocation(new Point(32,32));
-		Texture texture = new Texture("src\\twitchblast\\gfx\\Spaceship.png");
-		tile = new Tile(texture, getLocation().x, getLocation().y, 32, 32);
+		super( 32, 32, 32, 32);
+		setTexture(new Texture("src\\twitchblast\\gfx\\Spaceship.png"));
 		setSpeed(4);
 		lifePoints = 100;
 	}
-
-
-	public Tile getTile(int frame) {
-		return tile;
-	}
-
-
-	public Point getLocation() {
-		return location;
-	}
-
-	public void setLocation(Point location) {
-		this.location = location;
-	}
-
 
 	public void increaseMomentum(int direction) {
 		double force = 0.2;
@@ -60,11 +43,9 @@ public class Rocket extends Drawable /*implements PhysicalObject */{
 	}
 	
 	public void move() {
-		getLocation().x += Math.round(getMomentum().x);
-		getLocation().y += Math.round(getMomentum().y);
 		momentum.x = momentum.x*(29d/30d);
 		momentum.y = momentum.y*(29d/30d);
-		tile.setLocation(getLocation().x, -getLocation().y);
+		super.move(Math.round(getMomentum().x),Math.round(getMomentum().y));
 	}
 
 	public void update() {
@@ -89,12 +70,12 @@ public class Rocket extends Drawable /*implements PhysicalObject */{
 
 
 	public void collideWithMapBorders() {
-		if(getLocation().x<0)
-			getLocation().x = 0;
+		if(getX()<0)
+			setX(0);
 //		if(getLocation().y<0) //TODO abhängig von kameraposition
 //			getLocation().y = 0;
-		if(getLocation().x>224)
-			getLocation().x = 224;
+		if(getX()>224)
+			setX(224);
 //		if(getLocation().y>288)
 //			getLocation().y = 288;
 	}
@@ -171,5 +152,8 @@ public class Rocket extends Drawable /*implements PhysicalObject */{
 //	public boolean exists() {
 //		return true;
 //	}
-	
+	@Deprecated
+	public Point getLocation() {
+		return new Point((int)getX(),(int)getY());
+	}
 }

@@ -1,7 +1,5 @@
 package twitchblast;
 
-import java.nio.ByteBuffer;
-
 import twitchblast.opengraphicslibrary.Texture;
 
 public class Tile {
@@ -17,17 +15,15 @@ public class Tile {
 		this.height = height;
 		this.setTexture(texture);
 	}
+	/** Nach diesem Konstruktor unverzüglich die Textur setzen!**/
+	public Tile( float x, float y, float width, float height) {	
+		this(null,x,y,width,height);
+	}
 	public void move(float xDir, float yDir) {
 		x += xDir;
 		y += yDir;
 	}
-	public float getX() {
-		return x;
-	}
-	public float getY() {
-		return y;
-	}
-	
+
 	public void setLocation(float xIn, float yIn) {
 		x = xIn;
 		y = yIn;
@@ -44,13 +40,21 @@ public class Tile {
 	}
 
 	public void setTexture(Texture texture) {
-		texture.update((int)getWidth(),(int)getHeight());
+		if(texture != null)
+			texture.update((int)getWidth(),(int)getHeight());
 		this.texture = texture;
   
 	}
-	public ByteBuffer getPixelBuffer() {
-		
-		return texture.getPixelBuffer();
+	public float getX() {
+		return x;
 	}
-
+	public float getY() {
+		return y;
+	}
+	protected void setX(float newX) {
+		x = newX;
+	}
+	protected void setY(float newY) {
+		y = newY;
+	}
 }

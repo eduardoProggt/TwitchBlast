@@ -1,6 +1,5 @@
 package twitchblast.controller;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import twitchblast.World;
 import twitchblast.glfw.InputController;
 import twitchblast.glfw.Window;
@@ -138,11 +137,6 @@ public class GameController {
 	}
 	public void setPaused(boolean psed) {
 		paused = psed;
-		
-	}
-
-	public void pollEvents() {
-		glfwPollEvents();
 		
 	}
 }
