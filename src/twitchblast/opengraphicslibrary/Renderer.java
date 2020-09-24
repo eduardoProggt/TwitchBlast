@@ -17,11 +17,14 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
+import java.util.Deque;
+
 import org.joml.Matrix3f;
 import org.lwjgl.opengl.GL;
 
 import twitchblast.Tile;
 import twitchblast.World;
+import twitchblast.chunks.Chunk;
 import twitchblast.controller.Camera;
 import twitchblast.glfw.Window;
 import twitchblast.textureatlas.TextTileAtlas;
@@ -110,7 +113,7 @@ public class Renderer {
 		
 		
 		Tile textAsTile = textAtlas.getTextAsTile(text);
-		textAsTile.setLocation(16*16, -lineNumber*35);
+		textAsTile.setLocation(16*16, lineNumber*35);
 		renderTile(textAsTile,false);
 		
         glFlush();
@@ -129,7 +132,7 @@ public class Renderer {
 		mat3.mul(getTranslate(-(winWidth-tile.getWidth())/2,-(winHeight-tile.getHeight())/2));
 			
 		//Actual translation
-		mat3.mul(getTranslate(tile.getX(), -tile.getY()));
+		mat3.mul(getTranslate(tile.getX(), tile.getY()));
 		if(withCam)
 			mat3 = mat3.mul(cam.getMat());
 		//------------------

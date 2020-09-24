@@ -29,7 +29,6 @@ public class WorldTileAtlas extends TileAtlas{
 		
 		int chunkId=0;
 		for (Chunk chunk : chunks) {
-
 			int a=0;
 			//Tile - weise
 			for (int j = 0; j < 4; j++) {

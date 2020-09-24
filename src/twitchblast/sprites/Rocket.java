@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.joml.Vector2d;
 
+import twitchblast.Collider;
 import twitchblast.Tile;
 
 import twitchblast.opengraphicslibrary.Texture;
@@ -70,12 +71,16 @@ public class Rocket extends Tile /*implements PhysicalObject */{
 
 
 	public void collideWithMapBorders() {
-		if(getX()<0)
+		if(getX()<0) {
 			setX(0);
+			momentum.x=0.2;
+		}
 //		if(getLocation().y<0) //TODO abhängig von kameraposition
 //			getLocation().y = 0;
-		if(getX()>224)
+		if(getX()>224) {
 			setX(224);
+			momentum.x=-0.2;
+		}
 //		if(getLocation().y>288)
 //			getLocation().y = 288;
 	}
@@ -155,5 +160,29 @@ public class Rocket extends Tile /*implements PhysicalObject */{
 	@Deprecated
 	public Point getLocation() {
 		return new Point((int)getX(),(int)getY());
+	}
+
+	public void collide(int collision) {
+		if(collision == Collider.EAST) {
+			move(-1, 0);
+			if(getMomentum().x>0)
+				getMomentum().x *= 0.5d;
+		}
+		if(collision == Collider.WEST) {
+			move(1, 0);
+			if(getMomentum().x<0)
+				getMomentum().x *= 0.5d;
+		}
+		if(collision == Collider.SOUTH) {
+			move(0, -1);
+			if(getMomentum().y>0)
+				getMomentum().y *= 0.5d;
+		}
+		if(collision == Collider.NORTH) {
+			move(0, 1);
+			if(getMomentum().y<0)
+				getMomentum().y *= 0.5d;
+		}
+		
 	}
 }

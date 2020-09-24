@@ -20,11 +20,13 @@ public class Landscape {
 	
 	public Landscape() {
 		for (int i = 0; i <= 8; i++) {
-			chunks.offer(generateChunk());
+			Chunk newChunk = generateChunk();
+			newChunk.setNumber(i);
+			getChunks().offer(newChunk);
 		}
 		
 		tileAtlas = new WorldTileAtlas(PATH_TO_WORLD_TEXTURES_FILE);
-		tileAtlas.createTexture(chunks);
+		tileAtlas.createTexture(getChunks());
 		tile = new Tile(tileAtlas.getResTex(), -0.63f, 0, 16*16, 16*4*9);
 	}
 
@@ -43,13 +45,19 @@ public class Landscape {
 
 	public void stepForward() {
 		Chunk newChunk = generateChunk();
-		chunks.offer(newChunk);
-		chunks.pop();
+		newChunk.setNumber(getChunks().getFirst().getNumber()-1);
+		getChunks().offerFirst(newChunk);
+		getChunks().pollLast();
 		tile.setTexture(tileAtlas.redrawTexture(newChunk));
 	}
 
 	public Tile getTile() {
 		return tile;
+	}
+
+
+	public Deque<Chunk> getChunks() {
+		return chunks;
 	}
 	
 }

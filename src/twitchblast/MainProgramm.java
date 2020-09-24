@@ -30,26 +30,27 @@ public class MainProgramm {
 		long currentTimeMillis = 0;
 		long takentime = 0;
 		final long SLEEP_TIME_PER_FRAME = 16;
-
+		
 		while ( !win.shouldClose()) {
 
 			if(win.orderedToClose())
 				win.setShouldClose();
 
-				currentTimeMillis = System.currentTimeMillis();
-				gameController.calcNextFrame();
-				takentime = System.currentTimeMillis() - currentTimeMillis;
-				
-				sleepTimeInMilliSeconds = SLEEP_TIME_PER_FRAME - takentime;
-				if(sleepTimeInMilliSeconds<0)
-					sleepTimeInMilliSeconds=0;
+			currentTimeMillis = System.currentTimeMillis();
+			gameController.calcNextFrame();
 
-				try {
-					Thread.sleep(sleepTimeInMilliSeconds,0);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			takentime = System.currentTimeMillis() - currentTimeMillis;
+			
+			sleepTimeInMilliSeconds = SLEEP_TIME_PER_FRAME - takentime;
+			if(sleepTimeInMilliSeconds<0)
+				sleepTimeInMilliSeconds=0;
+
+			try {
+				Thread.sleep(sleepTimeInMilliSeconds,0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				
 				
 //			else if(glfwGetKey(win.getWinId(),GLFW_KEY_ENTER) == GL_TRUE)
