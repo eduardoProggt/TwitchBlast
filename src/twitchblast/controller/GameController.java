@@ -61,6 +61,7 @@ public class GameController {
 		if(controller.leftPressed())
 			rocket.increaseMomentum(Rocket.LEFT);
 //		if(controller.spaceTipped())
+//			world.
 //			worldObjects.add(rocket.shoot());
 	}
 	

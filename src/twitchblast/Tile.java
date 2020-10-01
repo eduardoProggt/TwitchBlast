@@ -1,5 +1,6 @@
 package twitchblast;
 
+import twitchblast.chunks.Chunk;
 import twitchblast.opengraphicslibrary.Texture;
 
 public class Tile {
@@ -57,4 +58,5 @@ public class Tile {
 	protected void setY(float newY) {
 		y = newY;
 	}
+
 }

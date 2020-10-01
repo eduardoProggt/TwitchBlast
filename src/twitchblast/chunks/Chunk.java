@@ -26,4 +26,11 @@ public abstract class Chunk {
 		number = newNumber;
 	}
 
+	public void destroyTile(int x, int y) {
+		if(tileGrid[x][y] ==25) {
+			tileGrid[x][y]--;//Mauer wird zerstört;
+			tileGrid[x][y-1]--;
+		}
+	}
+
 }

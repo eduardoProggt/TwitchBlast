@@ -56,6 +56,43 @@ public class WorldTileAtlas extends TileAtlas{
 	}
 
 	public Texture redrawTexture(Chunk newChunk) {
+		int[][] newTex = movePixelsDown();
+		
+		setPixelsOfNewChunk(newChunk, newTex);
+
+		currentTex = newTex;
+		return writeTextureIntoBuffer(newTex);
+	}
+	public Texture revalidateChunk(Chunk newChunk, int nr) {
+		
+		setPixelsOfNewChunk(newChunk, currentTex, nr);
+
+		return writeTextureIntoBuffer(currentTex);
+	}
+
+	public void setPixelsOfNewChunk(Chunk newChunk, int[][] newTex) {
+		setPixelsOfNewChunk(newChunk, newTex, 0);
+	}
+	public void setPixelsOfNewChunk(Chunk newChunk, int[][] newTex, int offset) {
+		int a=0;
+		int yOffset = offset * 16*4;
+		//Tile - weise
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 16; i++) {
+				 a= newChunk.getTile(i, j);
+				//Pixel - weise
+				for (int y = 0; y < 16; y++) {
+					for (int x = 0; x < 16; x++) {
+			
+						newTex[i*16+x][j*16+y + yOffset] = tiles.get(a)[x][y];
+				
+					}
+				}
+
+			}
+		}
+	}
+	public int[][] movePixelsDown() {
 		int[][] newTex = new int[16*16][16*4*9];
 
 		for (int y = 0; y < 16*4*8; y++) {
@@ -65,26 +102,7 @@ public class WorldTileAtlas extends TileAtlas{
 		
 			}
 		}
-		
-		int a=0;
-		//Tile - weise
-		for (int j = 0; j < 4; j++) {
-			for (int i = 0; i < 16; i++) {
-				 a= newChunk.getTile(i, j);
-				//Pixel - weise
-				for (int y = 0; y < 16; y++) {
-					for (int x = 0; x < 16; x++) {
-			
-						newTex[i*16+x][j*16+y] = tiles.get(a)[x][y];
-				
-					}
-				}
-
-			}
-		}
-
-		currentTex = newTex;
-		return writeTextureIntoBuffer(newTex);
+		return newTex;
 	}
 
 }

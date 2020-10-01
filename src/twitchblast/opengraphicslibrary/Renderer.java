@@ -121,8 +121,8 @@ public class Renderer {
 	
 	private void renderTile(Tile tile, boolean withCam) {
 		mat3.identity();
-		
-		//Entzerren (Quadrate sind wieder quadratisch)
+
+		//Entzerren (Quadrate sind wieder quadratisch), y invertieren
 		mat3.scale(tile.getWidth()/winWidth,-tile.getHeight()/winHeight,1f);
 			
 		//Screen Koordinaten(Translation um 16 in x richtung sind tatsächlich ein tile)
@@ -132,6 +132,7 @@ public class Renderer {
 		mat3.mul(getTranslate(-(winWidth-tile.getWidth())/2,-(winHeight-tile.getHeight())/2));
 			
 		//Actual translation
+		
 		mat3.mul(getTranslate(tile.getX(), tile.getY()));
 		if(withCam)
 			mat3 = mat3.mul(cam.getMat());

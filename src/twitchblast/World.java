@@ -7,10 +7,11 @@ import java.util.List;
 
 import twitchblast.chunks.Chunk;
 import twitchblast.controller.Camera;
+import twitchblast.sprites.PhysicalObject;
 import twitchblast.sprites.Rocket;
 
 public class World {
-	
+
 	final int CHUNK_HEIGHT = 4*16;
 	
 	private Collider collider = new Collider();//TODO Sowas in die collidable - oberklasse
@@ -18,29 +19,16 @@ public class World {
 	private List<Rocket> uptadableObjects= new ArrayList<>();//TODO, Vernünfitiger Name, interface
 	private Rocket rocket = new Rocket();
 	
-	private Landscape landscape;
+	private Level level;
 	
 //	private List<Projectile> flyingBullets= new ArrayList<>();
 
 	public World() {
-		landscape = new Landscape();
-		textlists.add(landscape.getTile());
+		level = new Level();
+		textlists.add(level.getTile());
 		textlists.add(rocket);
 		uptadableObjects.add(rocket);
 	}
-//	public void renderNextFrame(Rocket rocket) {
-//		getRenderer().bindTextures();
-//		for (Chunk chunk : getChunks()) {
-//			
-//			for (int ey = 0; ey < 4; ey++) {
-//				for (int ex = 0; ex < 16; ex++) {
-//					getRenderer().renderWorldTile(ex*16,chunk.y+ey*16, chunk.getTile(ex,ey),chunk.getTile(ex,ey));
-//
-//				}
-//			}
-//			chunk.update(getRenderer(),rocket);
-//			
-//		}
 
 //		Projectile bulletWhichHit = null;
 //		for (Projectile towerRocket : flyingBullets) {
@@ -63,28 +51,6 @@ public class World {
 //
 //	}
 
-//	public int getHighestChunkY() {
-//		return getChunks().getLast().y;
-//	}
-//	public void addChunk() {
-//		getChunks().add(generateChunk(getHighestChunkY()-4*16));
-//	}
-//	public Renderer getRenderer() {
-//		return null;// renderer;
-//	}
-//	public Deque<Chunk> getChunks() {
-//		return chunks;
-//	}
-
-//	public void updateChunks(float camY) {
-//			if(getHighestChunkY()>camY) {
-//				addChunk();
-//			}
-//			if(getChunks().size()>8) {
-//				getChunks().poll();
-//			}
-//		
-//	}
 	public List<Tile> getTiles() {
 
 		return textlists;
@@ -92,18 +58,18 @@ public class World {
 	}
 	public void update(){
 		//Statt Rocket kommt das interface
-		for (Rocket tile : uptadableObjects) {
+		for (PhysicalObject tile : uptadableObjects) {
 			tile.update();
 		}
 		collideWithChunk();
 	}
 	public void updateChunks() {
-		landscape.stepForward();
+		level.stepForward();
 	}
 
 	public void scroll(Camera cam) {
 		cam.scrollY(1f);
-		Tile tile = landscape.getTile();
+		Tile tile = level.getTile();
 
 		if(cam.getY() > -tile.getY()) {
 			updateChunks();
@@ -112,23 +78,21 @@ public class World {
 		
 	}
 	private void collideWithChunk(){
-		for(Rocket eObj : uptadableObjects) {
 
-			System.out.println(eObj.getY());
-			for (Chunk chunk : landscape.getChunks()) {
-			//TODO Optimieren (Aber so dass es NICHT Bugged)
-//				if(chunk.y < eObj.getLocation().getY()+16*4 && chunk.y > eObj.getLocation().getY()-16*4) {
-
-					collide(eObj,chunk);
-//				}
+		float chunkY;
+		for(PhysicalObject object : uptadableObjects) {
+			for (Chunk chunk : level.getChunks()) {
+				chunkY = chunk.getNumber()*16*4;
+				if( chunkY < object.getY()+16*4 && chunkY > object.getY()-16*4) {
+					collide(object,chunk);
+				}
 			}
 		}
 	}
 		
-	private void collide(Rocket rocket, Chunk chunk) {
-		//TODO Optimieren (Aber so dass es NICHT Bugged)
-		final float MIN_X = 0;//rocket.getX()/16 < 0 ? 0 : rocket.getX()/16;
-		final float MAX_X = 16;//rocket.getX()/16+3 > 16 ? 16 : rocket.getX()/16+3;
+	private void collide(PhysicalObject object, Chunk chunk) {
+		final float MIN_X = object.getX()/16 < 0 ? 0 : object.getX()/16;
+		final float MAX_X = object.getX()/16+3 > 16 ? 16 : object.getX()/16+3;
 
 		for (int ey = 0; ey < 4; ey++) {
 			for (int ex = (int)MIN_X ; ex < (int)MAX_X; ex++) {
@@ -138,24 +102,22 @@ public class World {
 
 				if(tile==1 || tile==17 || tile==25) {
 		
-					int collision = collider.intersects(xCoord,yCoord,16,16,(int) rocket.getX(),(int)rocket.getY(),32,32);
-					if(collision == Collider.NOT)
+					int collisionDir = collider.intersects(xCoord,yCoord,16,16,(int) object.getX(),(int)object.getY(),32,32);
+					//TODO Über  nachdenken
+					if(collisionDir == Collider.NOT)
 						continue;
-					rocket.collide(collision);
+					Collision collision = new Collision(ex, ey, chunk);
+					float intensity = object.collide(collisionDir);
+					collision.setIntensity(intensity);
+					level.collide(collision);
 				}
 			
 			}
 		}
 	}
 	public Rocket getRocket() {
-		// TODO Auto-generated method stub
 		return rocket;
 	}
-	/**debug
-	 * @return ***/
-	public Deque<Chunk> getChunks() {
-		return landscape.getChunks();
-		
-	}
+
 	
 }

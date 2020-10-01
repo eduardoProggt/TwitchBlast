@@ -1,6 +1,5 @@
 package twitchblast;
 
-import java.nio.ByteBuffer;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -8,17 +7,16 @@ import twitchblast.chunks.BulletTowerChunk;
 import twitchblast.chunks.Chunk;
 import twitchblast.chunks.DefaultChunk;
 import twitchblast.chunks.RocketTowerChunk;
-import twitchblast.opengraphicslibrary.Texture;
 import twitchblast.textureatlas.WorldTileAtlas;
 
-public class Landscape {
+public class Level {
 
 	private Deque<Chunk> chunks = new LinkedList<>();
 	private Tile tile;
 	private WorldTileAtlas tileAtlas;
 	final String PATH_TO_WORLD_TEXTURES_FILE = "src\\twitchblast\\gfx\\Texturesheet.png";
 	
-	public Landscape() {
+	public Level() {
 		for (int i = 0; i <= 8; i++) {
 			Chunk newChunk = generateChunk();
 			newChunk.setNumber(i);
@@ -51,6 +49,7 @@ public class Landscape {
 		tile.setTexture(tileAtlas.redrawTexture(newChunk));
 	}
 
+	
 	public Tile getTile() {
 		return tile;
 	}
@@ -58,6 +57,15 @@ public class Landscape {
 
 	public Deque<Chunk> getChunks() {
 		return chunks;
+	}
+	public void collide(Collision collision) {
+		//TODO wenn intensity groesser als 10 oder so ist, werden auch angrenzende tiles affektiert
+		if(collision.getIntensity() > 0) {
+			Chunk chunkWithCollision = collision.getChunk();
+			chunkWithCollision.destroyTile(collision.getX(), collision.getY());
+			int chunkNrInTextureWorld = chunkWithCollision.getNumber() - getChunks().getFirst().getNumber();
+			tile.setTexture(tileAtlas.revalidateChunk(chunkWithCollision, chunkNrInTextureWorld));//TODO nicht den ganzen Chunk sondern nur die geaenderten Tiles updaten
+		}
 	}
 	
 }

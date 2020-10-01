@@ -8,10 +8,9 @@ import org.joml.Vector2d;
 
 import twitchblast.Collider;
 import twitchblast.Tile;
-
 import twitchblast.opengraphicslibrary.Texture;
 
-public class Rocket extends Tile /*implements PhysicalObject */{
+public class Rocket extends Tile implements PhysicalObject {
 	public static final int UP = 0;
 	public static final int DOWN = 1;
 	public static final int RIGHT = 2;
@@ -48,7 +47,7 @@ public class Rocket extends Tile /*implements PhysicalObject */{
 		momentum.y = momentum.y*(29d/30d);
 		super.move(Math.round(getMomentum().x),Math.round(getMomentum().y));
 	}
-
+	@Override
 	public void update() {
 		
 		move();
@@ -161,28 +160,29 @@ public class Rocket extends Tile /*implements PhysicalObject */{
 	public Point getLocation() {
 		return new Point((int)getX(),(int)getY());
 	}
-
-	public void collide(int collision) {
-		if(collision == Collider.EAST) {
+	/**Gibt eine damage zurück, die die Kollision anrichtet*/
+	@Override
+	public float collide(int collisionDirection) {
+		if(collisionDirection == Collider.EAST) {
 			move(-1, 0);
 			if(getMomentum().x>0)
 				getMomentum().x *= 0.5d;
 		}
-		if(collision == Collider.WEST) {
+		if(collisionDirection == Collider.WEST) {
 			move(1, 0);
 			if(getMomentum().x<0)
 				getMomentum().x *= 0.5d;
 		}
-		if(collision == Collider.SOUTH) {
+		if(collisionDirection == Collider.SOUTH) {
 			move(0, -1);
 			if(getMomentum().y>0)
 				getMomentum().y *= 0.5d;
 		}
-		if(collision == Collider.NORTH) {
+		if(collisionDirection == Collider.NORTH) {
 			move(0, 1);
 			if(getMomentum().y<0)
 				getMomentum().y *= 0.5d;
 		}
-		
+		return 0;
 	}
 }

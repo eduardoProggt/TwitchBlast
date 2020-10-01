@@ -12,10 +12,12 @@ public class InputController {
 	}
 	public boolean spaceTipped() {
 		boolean retval=false;
-		
-		if(space == 0 && glfwGetMouseButton(glfwGetCurrentContext(),GLFW_MOUSE_BUTTON_1) == 1)
+		if(keyV == 0 && glfwGetKey(glfwGetCurrentContext(),GLFW_KEY_SPACE) == 1)
 			retval = true;
-		space = glfwGetMouseButton(glfwGetCurrentContext(),GLFW_MOUSE_BUTTON_1);
+		keyV = glfwGetKey(glfwGetCurrentContext(),GLFW_KEY_SPACE);
+//		if(space == 0 && glfwGetMouseButton(glfwGetCurrentContext(),GLFW_MOUSE_BUTTON_1) == 1)
+//			retval = true;
+//		space = glfwGetMouseButton(glfwGetCurrentContext(),GLFW_MOUSE_BUTTON_1);
 		return retval;
 	}
 	public boolean keyVTipped() {
